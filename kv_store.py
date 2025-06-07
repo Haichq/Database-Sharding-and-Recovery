@@ -155,7 +155,6 @@ def main(initial_kv_store, operation_list_list, undo_operation_list_list, redo_l
             # ["set", "delete", "add", "subtract", "multiply", "divide"]
             # Hint: Consider if the key existed in the initial store or not
             # Hint: Consider machine precision for division
-            
         undo_operation_list_list.append(undo_operations_list)
             
 
