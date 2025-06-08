@@ -171,6 +171,7 @@ def main(initial_kv_store, operation_list_list, undo_operation_list_list, redo_l
     for operation_list in reversed(operation_list_list):  # Reverse the order for undo operations
         undo_operations_list = []
         for operation in reversed(operation_list):
+            undo_operation = {}
             action = operation["action"]
             key = operation["key"]
             # TODO Undo the action of the operation
@@ -179,25 +180,26 @@ def main(initial_kv_store, operation_list_list, undo_operation_list_list, redo_l
             # Hint: Consider machine precision for division
             if action == "set":
                 if key in kv_store.keys():
-                    undo_operations_list["action"] = "set"
-                    undo_operations_list["value"] = initial_kv_store.get(key)
+                    undo_operation["action"] = "set"
+                    undo_operation["value"] = initial_kv_store.get(key)
                 else:
-                    undo_operations_list["action"] = "delete"
+                    undo_operation["action"] = "delete"
             elif action == "delete":
-                undo_operations_list["action"] = "set"
-                undo_operations_list["value"] = initial_kv_store.get(key)
+                undo_operation["action"] = "set"
+                undo_operation["value"] = initial_kv_store.get(key)
             elif action == "add":
-                undo_operations_list["action"] = "subtract"
-                undo_operations_list["value"] = operation["value"]
+                undo_operation["action"] = "subtract"
+                undo_operation["value"] = operation["value"]
             elif action == "subtract":
-                undo_operations_list["action"] = "add"
-                undo_operations_list["value"] = operation["value"]
+                undo_operation["action"] = "add"
+                undo_operation["value"] = operation["value"]
             elif action == "multiply":
-                undo_operations_list["action"] = "divide"
-                undo_operations_list["value"] = operation["value"]
+                undo_operation["action"] = "divide"
+                undo_operation["value"] = operation["value"]
             elif action == "divide":
-                undo_operations_list["action"] = "multiply"
-                undo_operations_list["value"] = operation["value"]
+                undo_operation["action"] = "multiply"
+                undo_operation["value"] = operation["value"]
+            undo_operations_list.append(undo_operation)
 
 
 
