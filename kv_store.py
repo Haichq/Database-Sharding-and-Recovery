@@ -180,12 +180,12 @@ def main(initial_kv_store, operation_list_list, undo_operation_list_list, redo_l
             if action == "set":
                 if key in kv_store.keys():
                     undo_operations_list["action"] = "set"
-                    undo_operations_list["value"] = kv_store.get(key)
+                    undo_operations_list["value"] = initial_kv_store.get(key)
                 else:
                     undo_operations_list["action"] = "delete"
             elif action == "delete":
                 undo_operations_list["action"] = "set"
-                undo_operations_list["value"] = kv_store.get(key)
+                undo_operations_list["value"] = initial_kv_store.get(key)
             elif action == "add":
                 undo_operations_list["action"] = "subtract"
                 undo_operations_list["value"] = operation["value"]
