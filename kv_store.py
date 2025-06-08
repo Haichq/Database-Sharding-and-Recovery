@@ -177,6 +177,30 @@ def main(initial_kv_store, operation_list_list, undo_operation_list_list, redo_l
             # ["set", "delete", "add", "subtract", "multiply", "divide"]
             # Hint: Consider if the key existed in the initial store or not
             # Hint: Consider machine precision for division
+            if action == "set":
+                if key in kv_store.keys():
+                    undo_operations_list["action"] = "set"
+                    undo_operations_list["value"] = kv_store.get(key)
+                else:
+                    undo_operations_list["action"] = "delete"
+            elif action == "delete":
+                undo_operations_list["action"] = "set"
+                undo_operations_list["value"] = kv_store.get(key)
+            elif action == "add":
+                undo_operations_list["action"] = "subtract"
+                undo_operations_list["value"] = operation["value"]
+            elif action == "subtract":
+                undo_operations_list["action"] = "add"
+                undo_operations_list["value"] = operation["value"]
+            elif action == "multiply":
+                undo_operations_list["action"] = "divide"
+                undo_operations_list["value"] = operation["value"]
+            elif action == "divide":
+                undo_operations_list["action"] = "multiply"
+                undo_operations_list["value"] = operation["value"]
+
+
+
         undo_operation_list_list.append(undo_operations_list)
 
 
