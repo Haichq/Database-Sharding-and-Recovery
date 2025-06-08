@@ -109,8 +109,8 @@ class ShardedDatabase:
     #  one would store each key in several nodes, so it is unlikely all nodes die at the same time.
 
     def empty_nodes_check_remaining(self, nodes_to_empty=None):
-        list_remain = list()
-        list_kill = list()
+        list_remain = []
+        list_kill = []
         for n in self.nodes:
             if n not in nodes_to_empty:
                 list_remain.append(n)
