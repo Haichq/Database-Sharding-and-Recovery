@@ -119,6 +119,7 @@ def apply_operation(operation, store):
     #  After calculating, store them in the kv-store again as strings.
     #  If there is an operation on a key that doesn't exist, first initialize it with value 0 and then apply the operation.
     value_int = convert_string_to_number(operation["value"])
+    store_value_int=convert_string_to_number(store.get(key))
     # operation handling here
     if action == "set":
         #store[key] = str(convert_string_to_number(operation["value"]))
@@ -127,11 +128,11 @@ def apply_operation(operation, store):
         store.pop(key)
     # other actions here
     elif action == "add":
-        store[key] = str(store.get(key) + value_int)
+        store[key] = str(store_value_int + value_int)
     elif action == "subtract":
-        store[key] = str(store.get(key) - value_int)
+        store[key] = str(store_value_int - value_int)
     elif action == "multiply":
-        store[key] = str(store.get(key) * value_int)
+        store[key] = str(store_value_int * value_int)
     elif action == "divide":
         if value_int != 0:
             store[key] = str(store.get(key) / value_int)
