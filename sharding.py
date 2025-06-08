@@ -97,12 +97,36 @@ class ShardedDatabase:
     replicate_nodes = None
 
     # TODO 3: implement this method as stated in the exercise description
-    def empty_nodes_check_remaining(self,nodes_to_empty=None):
-        return
+    #  This method should take a list of node indices (nodes_to_empty).
+    #  First you store the values previously stored in the database, distinguishing between whether they are supposed to be deleted or not
+    #  Second you kill the respective nodes from the db (Use the provided methods empty_nodes()/empty_node())
+    #  Third, if at least one key was deleted, you check that the database no longer contains the elements of the killed nodes but still contains the elements of those that have not been killed.
+    #  If this does not hold, raise an exception with the given message (Use doesDBContainKeys()!)
+    #  Finally return the two lists of values (one which contains the elements still available, one which contains the elements deleted through killing the nodes)
+    #  As you see, sharding leads to an increase in availability,
+    #  simply because killing some nodes does not necessarily lead to all data being unavailable.
+    #  Instead, a certain amount of data is still available. To ensure a very low chance of data loss,
+    #  one would store each key in several nodes, so it is unlikely all nodes die at the same time.
+
+    def empty_nodes_check_remaining(self, nodes_to_empty=None):
+        list_remain = list
+        list_kill = list
+        for n in self.nodes:
+            if n not in nodes_to_empty:
+                list_remain.append(n)
+            else:
+                list_kill.append(n)
+                self.empty_node(n)
+        if len(list_remain) >= 1:
+            if self.doesDBContainKeys(list_remain):
+                raise Exception("Something went wrong")
+
+
+        return list_remain, list_kill
     
     # TODO 4: implement this method as stated in the exercise description
     def create_replicates(self):
-        return 
+        return self.nodes.copy()
     
     # TODO 5: implement this method as stated in the exercise description
     def recover_node(self, node_index):
@@ -110,7 +134,11 @@ class ShardedDatabase:
     
     # TODO 6: implement this method as stated in the exercise description
     def recover_nodes(self,nodes_to_recover):
-        return 
+        result = list
+        for n in nodes_to_recover:
+            result.append(self.recover_node(n))
+
+        return result
 
 
 
