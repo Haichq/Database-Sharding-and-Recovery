@@ -112,7 +112,7 @@ def apply_operation(operation, store):
 
     # non-existent key handling here
     if key not in store.keys():
-        store[key] = 0
+        store[key] = "0"
 
     # TODO You should get the values in a string format, in order to calculate the results,
     #  you have to convert those values using the convert_string_to_number function.
@@ -135,7 +135,9 @@ def apply_operation(operation, store):
         store[key] = str(store_value_int * value_int)
     elif action == "divide":
         if value_int != 0:
-            store[key] = str(store.get(key) / value_int)
+            store[key] = str(store_value_int / value_int)
+        else:
+            raise ValueError("Division by zero")
 
 
     # TODO
