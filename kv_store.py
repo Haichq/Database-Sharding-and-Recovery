@@ -208,8 +208,8 @@ def main(initial_kv_store, operation_list_list, undo_operation_list_list, redo_l
     with open(undo_log_file, "w") as file:
         for operation_list in undo_operation_list_list:
             # TODO Step 3: Write undo log to corresponding log file.
-            if operation_list["action"] == "delete":
-                operation["action"] = "set"
+            json.dump(undo_operation_list_list, file)
+            file.write("\n")
 
 
 
