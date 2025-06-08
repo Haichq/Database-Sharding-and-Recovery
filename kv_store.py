@@ -111,7 +111,7 @@ def apply_operation(operation, store):
     # When applying mathematical operations on a non-existent key, initialize it with value 0
 
     # non-existent key handling here
-    if key is None:
+    if key not in store.keys():
         operation["key"] = 0
 
     # TODO You should get the values in a string format, in order to calculate the results,
