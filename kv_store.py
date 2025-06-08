@@ -109,16 +109,34 @@ def apply_operation(operation, store):
     # Hint: After calculation with numerical type, convert into str
     # ["set", "delete", "add", "subtract", "multiply", "divide"]
     # When applying mathematical operations on a non-existent key, initialize it with value 0
-    
-    # non-existent key handling here
-    # TODO
 
+    # non-existent key handling here
+    if key is None:
+        operation["key"] = 0
+
+    # TODO You should get the values in a string format, in order to calculate the results,
+    #  you have to convert those values using the convert_string_to_number function.
+    #  After calculating, store them in the kv-store again as strings.
+    #  If there is an operation on a key that doesn't exist, first initialize it with value 0 and then apply the operation.
+    value_int = convert_string_to_number(operation["value"])
     # operation handling here
     if action == "set":
-        store[key] = str(convert_string_to_number(operation["value"]))
+        #store[key] = str(convert_string_to_number(operation["value"]))
+        store[key] = str(value_int)
     elif action == "delete":
         store.pop(key)
     # other actions here
+    elif action == "add":
+        store[key] = str(store.get(key) + value_int)
+    elif action == "subtract":
+        store[key] = str(store.get(key) - value_int)
+    elif action == "multiply":
+        store[key] = str(store.get(key) * value_int)
+    elif action == "divide":
+        if value_int != 0:
+            store[key] = str(store.get(key) / value_int)
+
+
     # TODO
 
 def main(initial_kv_store, operation_list_list, undo_operation_list_list, redo_log_file, undo_log_file):
@@ -141,6 +159,7 @@ def main(initial_kv_store, operation_list_list, undo_operation_list_list, redo_l
     for operation_list in operation_list_list:
         # TODO Step 1: Log and apply operations
         # Hint: you should consider using redo_log_file with logging function.
+        log_and_apply_operations(operation_list, kv_store, redo_log_file)
 
 
     comparison_kv_store = kv_store.copy()
@@ -156,19 +175,25 @@ def main(initial_kv_store, operation_list_list, undo_operation_list_list, redo_l
             # Hint: Consider if the key existed in the initial store or not
             # Hint: Consider machine precision for division
         undo_operation_list_list.append(undo_operations_list)
-            
+
 
     # Write undo log.
     with open(undo_log_file, "w") as file:
         for operation_list in undo_operation_list_list:
             # TODO Step 3: Write undo log to corresponding log file.
-            
+            if operation_list["action"] == "delete":
+                operation["action"] = "set"
+
+
+
 
     # TODO Step 4: Apply Undo Log
     # apply_log here
+    apply_log(undo_log_file, comparison_kv_store)
 
     # TODO Step 5: Apply Redo Log
     # apply_log here
+    apply_log(redo_log_file, comparison_kv_store)
 
     # Step 6: Comparison of initial state and the state after the log files
     return kv_store, comparison_kv_store
