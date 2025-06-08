@@ -112,7 +112,7 @@ def apply_operation(operation, store):
 
     # non-existent key handling here
     if key not in store.keys():
-        operation["key"] = 0
+        store[key] = 0
 
     # TODO You should get the values in a string format, in order to calculate the results,
     #  you have to convert those values using the convert_string_to_number function.
