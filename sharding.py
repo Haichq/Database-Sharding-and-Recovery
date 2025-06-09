@@ -115,16 +115,17 @@ class ShardedDatabase:
         list_remain = []
         list_kill = []
 
-        for n in self.nodes:
-            if n not in nodes_to_empty:
-                list_remain.append(n)
+        for key in self.nodes.keys():
+            if key == self.nodes[nodes_to_empty]:
+                list_kill.append(key)
             else:
-                list_kill.append(n)
-                self.empty_node(n)
+                list_remain.append(key)
+
         self.empty_nodes(nodes_to_empty)
 
         if self.doesDBContainKeys(list_kill):
-            raise Exception("Something went wrong")
+            raise Exception("Wrong")
+
 
         return list_remain, list_kill
     
