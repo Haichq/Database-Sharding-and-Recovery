@@ -105,6 +105,8 @@ def apply_operation(operation, store):
     #  you have to convert those values using the convert_string_to_number function.
     #  After calculating, store them in the kv-store again as strings.
     #  If there is an operation on a key that doesn't exist, first initialize it with value 0 and then apply the operation.
+    if "value" not in operation:
+        raise ValueError("Value does not exist")
     op_value_int = convert_string_to_number(operation["value"])
     store_value_int = convert_string_to_number(store.get(key, "0"))
     # operation handling here

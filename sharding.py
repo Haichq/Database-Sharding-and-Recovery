@@ -82,7 +82,7 @@ class ShardedDatabase:
 
     # TODO 1: implement this method as stated in the exercise description
     def doesDBContainKey(self, key: str):
-        if key in self.nodes:
+        if key in self.nodes.keys():
             return True
         return False
     
@@ -121,7 +121,6 @@ class ShardedDatabase:
             if self.doesDBContainKeys(list_remain):
                 raise Exception("Something went wrong")
 
-
         return list_remain, list_kill
     
     # TODO 4: implement this method as stated in the exercise description
@@ -130,11 +129,15 @@ class ShardedDatabase:
     
     # TODO 5: implement this method as stated in the exercise description
     def recover_node(self, node_index):
-        return 
+        #特定index的主分片丢失，想用副本恢复主分片
+        to_recover_node = self.create_replicates()[node_index]  # 找到副本中index的位置的node
+        self.nodes[node_index] = to_recover_node  # 从副本恢复到主分片
+        return to_recover_node  # return the recovered node.
+
     
     # TODO 6: implement this method as stated in the exercise description
     def recover_nodes(self,nodes_to_recover):
-        result = list()
+        result = []
         for n in nodes_to_recover:
             result.append(self.recover_node(n))
 
@@ -152,7 +155,7 @@ sharded_db = ShardedDatabase()
 
 sharded_db.create_replicates()
 
-nodes_to_be_emptied = [3,4]
+nodes_to_be_emptied = [3, 4]
 try:
     still_available, deleted = sharded_db.empty_nodes_check_remaining(nodes_to_be_emptied)
     print("Still available ", still_available)
