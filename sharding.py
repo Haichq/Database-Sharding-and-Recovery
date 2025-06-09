@@ -81,13 +81,10 @@ class ShardedDatabase:
         return messages
 
     # TODO 1: implement this method as stated in the exercise description
-    def doesDBContainKey(self, key: str):
-        shard = self.hash_key(key)
+    def doesDBContainKey(self, key: str):  # 比如 key = "book1"
+        shard = self.hash_key(key)  # 计算book1在哪个分片
 
-        if shard in self.nodes:
-
-            return True
-        return False
+        return self.nodes[shard].exists(key)  # 找到分片并查看该分片是否有key
     
     # TODO 2: implement this method as stated in the exercise description
     def doesDBContainKeys(self, keys: list):
