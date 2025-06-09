@@ -181,9 +181,6 @@ def main(initial_kv_store, operation_list_list, undo_operation_list_list, redo_l
             elif action == "divide":
                 undo_operations_list.append({"action": "multiply", "key": key, "value": operation["value"]})
 
-
-
-
         undo_operation_list_list.append(undo_operations_list)
 
 
@@ -192,7 +189,6 @@ def main(initial_kv_store, operation_list_list, undo_operation_list_list, redo_l
         for operation_list in undo_operation_list_list:
             # TODO Step 3: Write undo log to corresponding log file.
             file.write(json.dumps(operation_list) + "\n")
-
 
 
     # TODO Step 4: Apply Undo Log
