@@ -172,7 +172,8 @@ def main(initial_kv_store, operation_list_list, undo_operation_list_list, redo_l
                 else:
                     undo_operations_list.append({"action": "delete", "key": key})
             elif action == "delete":
-                undo_operations_list.append({"action": "set", "key": key, "value": initial_kv_store[key]})
+                if key in initial_kv_store.keys():
+                    undo_operations_list.append({"action": "set", "key": key, "value": initial_kv_store[key]})
             elif action == "add":
                 undo_operations_list.append({"action": "subtract", "key": key, "value": operation["value"]})
             elif action == "subtract":
