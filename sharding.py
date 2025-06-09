@@ -82,7 +82,10 @@ class ShardedDatabase:
 
     # TODO 1: implement this method as stated in the exercise description
     def doesDBContainKey(self, key: str):
-        if key in self.nodes.keys():
+        shard = self.hash_key(key)
+
+        if shard in self.nodes:
+
             return True
         return False
     
