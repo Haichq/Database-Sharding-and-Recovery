@@ -21,6 +21,7 @@ def random_key_value(key=None, l=8):
     value = ''.join(random.choices(string.digits, k=l))
     return key, value
 
+
 def generate_random_operations(n):
     """
     Generate a list of 'N' random operations.
@@ -41,6 +42,7 @@ def generate_random_operations(n):
             operations.append({"action": action, "key": key, "value": value})
     return operations
 
+
 def log_and_apply_operations(operation_list, store, log_file):
     """
     Log the operation and apply it to the store.
@@ -60,12 +62,14 @@ def log_and_apply_operations(operation_list, store, log_file):
     for operation in operation_list:
         apply_operation(operation, store)
 
+
 def apply_log(file_name, store):
     with open(file_name, 'r') as file:
         for line in file:
             operations = json.loads(line)
             for op in operations:
                 apply_operation(op, store)
+
 
 def convert_string_to_number(num):
     """
@@ -78,6 +82,7 @@ def convert_string_to_number(num):
         float: the converted number
     """
     return float(num)
+
 
 def apply_operation(operation, store):
     """
@@ -92,6 +97,8 @@ def apply_operation(operation, store):
     """
     action = operation["action"]
     key = operation["key"]
+    value = operation.get("value", "0")
+    value_numeric = convert_string_to_number(value)
     # TODO Apply operations to store
     # Remember: We are only considering numerical values, but have more actions
     # Hint: use the convert_string_to_number() function
@@ -105,31 +112,32 @@ def apply_operation(operation, store):
     #  you have to convert those values using the convert_string_to_number function.
     #  After calculating, store them in the kv-store again as strings.
     #  If there is an operation on a key that doesn't exist, first initialize it with value 0 and then apply the operation.
+    store[key] = store.get(key, "0")
 
-    op_value_int = convert_string_to_number(operation.get("value", "0"))
-    store_value_int = convert_string_to_number(store.get(key, "0"))
     # operation handling here
     if action == "set":
-        #store[key] = str(convert_string_to_number(operation["value"]))
-        store[key] = str(op_value_int)
+        store[key] = str(convert_string_to_number(operation["value"]))
     elif action == "delete":
         store.pop(key)
 
     # other actions here
     elif action == "add":
-        store[key] = str(store_value_int + op_value_int)
+        current = convert_string_to_number(store[key])
+        store[key] = str(current + value_numeric)
     elif action == "subtract":
-        store[key] = str(store_value_int - op_value_int)
+        current = convert_string_to_number(store[key])
+        store[key] = str(current - value_numeric)
     elif action == "multiply":
-        store[key] = str(store_value_int * op_value_int)
+        current = convert_string_to_number(store[key])
+        store[key] = str(current * value_numeric)
     elif action == "divide":
-        if op_value_int != 0:
-            store[key] = str(store_value_int / op_value_int)
-        else:
-            raise ValueError("Division by zero")
-
+        current = convert_string_to_number(store[key])
+        if value_numeric == 0:
+            raise Exception("Cannot divide by zero")
+        store[key] = str(current / value_numeric)
 
     # TODO
+
 
 def main(initial_kv_store, operation_list_list, undo_operation_list_list, redo_log_file, undo_log_file):
     """
@@ -153,7 +161,6 @@ def main(initial_kv_store, operation_list_list, undo_operation_list_list, redo_l
         # Hint: you should consider using redo_log_file with logging function.
         log_and_apply_operations(operation_list, kv_store, redo_log_file)
 
-
     comparison_kv_store = kv_store.copy()
 
     # Step 2: Generate and write Undo Log
@@ -167,15 +174,15 @@ def main(initial_kv_store, operation_list_list, undo_operation_list_list, redo_l
             # Hint: Consider if the key existed in the initial store or not
             # Hint: Consider machine precision for division
             if action == "set":
-                if key in initial_kv_store:
+                if key in initial_kv_store.keys():
                     undo_operations_list.append({"action": "set", "key": key, "value": initial_kv_store[key]})
                 else:
                     undo_operations_list.append({"action": "delete", "key": key})
             elif action == "delete":
-                if key in initial_kv_store:
+                if key in initial_kv_store.keys():
                     undo_operations_list.append({"action": "set", "key": key, "value": initial_kv_store[key]})
             elif action in ["add", "subtract", "multiply", "divide"]:
-                if key in initial_kv_store:
+                if key in initial_kv_store.keys():
                     undo_operations_list.append({"action": "set", "key": key, "value": initial_kv_store[key]})
                 else:
                     # Remove the key that was created by math operation
@@ -183,13 +190,11 @@ def main(initial_kv_store, operation_list_list, undo_operation_list_list, redo_l
 
         undo_operation_list_list.append(undo_operations_list)
 
-
     # Write undo log.
     with open(undo_log_file, "w") as file:
         for operation_list in undo_operation_list_list:
             # TODO Step 3: Write undo log to corresponding log file.
             file.write(json.dumps(operation_list) + "\n")
-
 
     # TODO Step 4: Apply Undo Log
     # apply_log here
