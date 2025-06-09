@@ -61,16 +61,6 @@ def log_and_apply_operations(operation_list, store, log_file):
         apply_operation(operation, store)
 
 def apply_log(file_name, store):
-    """
-    Apply the operations from a log file to the store.
-
-    Args:
-        file_name (str): The name of the log file.
-        store (dict): The key-value store to apply the operations to.
-
-    Returns:
-        None
-    """
     with open(file_name, 'r') as file:
         for line in file:
             operations = json.loads(line)
@@ -201,19 +191,17 @@ def main(initial_kv_store, operation_list_list, undo_operation_list_list, redo_l
     with open(undo_log_file, "w") as file:
         for operation_list in undo_operation_list_list:
             # TODO Step 3: Write undo log to corresponding log file.
-            json.dump(undo_operation_list_list, file)
-            file.write("\n")
-
+            file.write(json.dumps(operation_list) + "\n")
 
 
 
     # TODO Step 4: Apply Undo Log
     # apply_log here
-    apply_log(undo_log_file, comparison_kv_store)
+    apply_log(undo_log_file, kv_store)
 
     # TODO Step 5: Apply Redo Log
     # apply_log here
-    apply_log(redo_log_file, comparison_kv_store)
+    apply_log(redo_log_file, kv_store)
 
     # Step 6: Comparison of initial state and the state after the log files
     return kv_store, comparison_kv_store
