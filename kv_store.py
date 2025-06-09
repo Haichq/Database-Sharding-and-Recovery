@@ -111,22 +111,19 @@ def apply_operation(operation, store):
     # When applying mathematical operations on a non-existent key, initialize it with value 0
 
     # non-existent key handling here
-
-    if key not in store.keys():
-        store[key] = "0"
-
     # TODO You should get the values in a string format, in order to calculate the results,
     #  you have to convert those values using the convert_string_to_number function.
     #  After calculating, store them in the kv-store again as strings.
     #  If there is an operation on a key that doesn't exist, first initialize it with value 0 and then apply the operation.
-    op_value_int = convert_string_to_number(operation.get("value", "0"))
-    store_value_int=convert_string_to_number(store.get("key", "0"))
+    op_value_int = convert_string_to_number(operation["value"])
+    store_value_int = convert_string_to_number(store.get(key, "0"))
     # operation handling here
     if action == "set":
         #store[key] = str(convert_string_to_number(operation["value"]))
         store[key] = str(op_value_int)
     elif action == "delete":
         store.pop(key)
+
     # other actions here
     elif action == "add":
         store[key] = str(store_value_int + op_value_int)
@@ -180,27 +177,21 @@ def main(initial_kv_store, operation_list_list, undo_operation_list_list, redo_l
             # Hint: Consider if the key existed in the initial store or not
             # Hint: Consider machine precision for division
             if action == "set":
-                if key in kv_store.keys():
-                    undo_operation["action"] = "set"
-                    undo_operation["value"] = initial_kv_store.get(key)
+                if key in initial_kv_store.keys():
+                    undo_operations_list.append({"action": "set", "key": key, "value": initial_kv_store[key]})
                 else:
-                    undo_operation["action"] = "delete"
+                    undo_operations_list.append({"action": "delete", "key": key})
             elif action == "delete":
-                undo_operation["action"] = "set"
-                undo_operation["value"] = initial_kv_store.get(key)
+                undo_operations_list.append({"action": "set", "key": key, "value": initial_kv_store[key]})
             elif action == "add":
-                undo_operation["action"] = "subtract"
-                undo_operation["value"] = operation["value"]
+                undo_operations_list.append({"action": "subtract", "key": key, "value": operation["value"]})
             elif action == "subtract":
-                undo_operation["action"] = "add"
-                undo_operation["value"] = operation["value"]
+                undo_operations_list.append({"action": "add", "key": key, "value": operation["value"]})
             elif action == "multiply":
-                undo_operation["action"] = "divide"
-                undo_operation["value"] = operation["value"]
+                undo_operations_list.append({"action": "divide", "key": key, "value": operation["value"]})
             elif action == "divide":
-                undo_operation["action"] = "multiply"
-                undo_operation["value"] = operation["value"]
-            undo_operations_list.append(undo_operation)
+                undo_operations_list.append({"action": "multiply", "key": key, "value": operation["value"]})
+        undo_operations_list.append(undo_operation)
 
 
 
