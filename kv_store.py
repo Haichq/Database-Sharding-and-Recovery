@@ -174,14 +174,12 @@ def main(initial_kv_store, operation_list_list, undo_operation_list_list, redo_l
             elif action == "delete":
                 if key in initial_kv_store.keys():
                     undo_operations_list.append({"action": "set", "key": key, "value": initial_kv_store[key]})
-            elif action == "add":
-                undo_operations_list.append({"action": "subtract", "key": key, "value": operation["value"]})
-            elif action == "subtract":
-                undo_operations_list.append({"action": "add", "key": key, "value": operation["value"]})
-            elif action == "multiply":
-                undo_operations_list.append({"action": "divide", "key": key, "value": operation["value"]})
-            elif action == "divide":
-                undo_operations_list.append({"action": "multiply", "key": key, "value": operation["value"]})
+            elif action in ["add", "subtract", "multiply", "divide"]:
+                if key in initial_kv_store.keys():
+                    undo_operations_list.append({"action": "set", "key": key, "value": initial_kv_store[key]})
+                else:
+                    # Remove the key that was created by math operation
+                    undo_operations_list.append({"action": "delete", "key": key})
 
         undo_operation_list_list.append(undo_operations_list)
 
