@@ -122,10 +122,9 @@ class ShardedDatabase:
                 list_kill.append(n)
                 self.empty_node(n)
         self.empty_nodes(nodes_to_empty)
-        if len(list_remain) >= 1:
 
-            if self.doesDBContainKeys(list_kill):
-                raise Exception("Something went wrong")
+        if self.doesDBContainKeys(list_kill):
+            raise Exception("Something went wrong")
 
         return list_remain, list_kill
     
