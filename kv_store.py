@@ -111,6 +111,7 @@ def apply_operation(operation, store):
     # When applying mathematical operations on a non-existent key, initialize it with value 0
 
     # non-existent key handling here
+
     if key not in store.keys():
         store[key] = "0"
 
@@ -118,24 +119,24 @@ def apply_operation(operation, store):
     #  you have to convert those values using the convert_string_to_number function.
     #  After calculating, store them in the kv-store again as strings.
     #  If there is an operation on a key that doesn't exist, first initialize it with value 0 and then apply the operation.
-    value_int = convert_string_to_number(operation.get("value", "0"))
-    store_value_int=convert_string_to_number(store.get(key))
+    op_value_int = convert_string_to_number(operation.get("value", "0"))
+    store_value_int=convert_string_to_number(store.get("key", "0"))
     # operation handling here
     if action == "set":
         #store[key] = str(convert_string_to_number(operation["value"]))
-        store[key] = str(value_int)
+        store[key] = str(op_value_int)
     elif action == "delete":
         store.pop(key)
     # other actions here
     elif action == "add":
-        store[key] = str(store_value_int + value_int)
+        store[key] = str(store_value_int + op_value_int)
     elif action == "subtract":
-        store[key] = str(store_value_int - value_int)
+        store[key] = str(store_value_int - op_value_int)
     elif action == "multiply":
-        store[key] = str(store_value_int * value_int)
+        store[key] = str(store_value_int * op_value_int)
     elif action == "divide":
-        if value_int != 0:
-            store[key] = str(store_value_int / value_int)
+        if op_value_int != 0:
+            store[key] = str(store_value_int / op_value_int)
         else:
             raise ValueError("Division by zero")
 
