@@ -114,14 +114,16 @@ class ShardedDatabase:
     def empty_nodes_check_remaining(self, nodes_to_empty=None):
         list_remain = []
         list_kill = []
+
         for n in self.nodes:
             if n not in nodes_to_empty:
                 list_remain.append(n)
             else:
                 list_kill.append(n)
                 self.empty_node(n)
+        self.empty_nodes(nodes_to_empty)
         if len(list_remain) >= 1:
-            self.empty_nodes(nodes_to_empty)
+
             if self.doesDBContainKeys(list_kill):
                 raise Exception("Something went wrong")
 
