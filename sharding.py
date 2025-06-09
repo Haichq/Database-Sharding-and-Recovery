@@ -99,9 +99,12 @@ class ShardedDatabase:
     # TODO 3: implement this method as stated in the exercise description
     #  This method should take a list of node indices (nodes_to_empty).
     #  First you store the values previously stored in the database, distinguishing between whether they are supposed to be deleted or not
+
     #  Second you kill the respective nodes from the db (Use the provided methods empty_nodes()/empty_node())
+
     #  Third, if at least one key was deleted, you check that the database no longer contains the elements of the killed nodes but still contains the elements of those that have not been killed.
     #  If this does not hold, raise an exception with the given message (Use doesDBContainKeys()!)
+
     #  Finally return the two lists of values (one which contains the elements still available, one which contains the elements deleted through killing the nodes)
     #  As you see, sharding leads to an increase in availability,
     #  simply because killing some nodes does not necessarily lead to all data being unavailable.
@@ -118,7 +121,8 @@ class ShardedDatabase:
                 list_kill.append(n)
                 self.empty_node(n)
         if len(list_remain) >= 1:
-            if self.doesDBContainKeys(list_remain):
+            self.empty_nodes(nodes_to_empty)
+            if self.doesDBContainKeys(list_kill):
                 raise Exception("Something went wrong")
 
         return list_remain, list_kill
