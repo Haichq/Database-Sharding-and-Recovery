@@ -169,7 +169,6 @@ def main(initial_kv_store, operation_list_list, undo_operation_list_list, redo_l
     for operation_list in reversed(operation_list_list):  # Reverse the order for undo operations
         undo_operations_list = []
         for operation in reversed(operation_list):
-            undo_operation = {}
             action = operation["action"]
             key = operation["key"]
             # TODO Undo the action of the operation
@@ -191,7 +190,7 @@ def main(initial_kv_store, operation_list_list, undo_operation_list_list, redo_l
                 undo_operations_list.append({"action": "divide", "key": key, "value": operation["value"]})
             elif action == "divide":
                 undo_operations_list.append({"action": "multiply", "key": key, "value": operation["value"]})
-        undo_operations_list.append(undo_operation)
+
 
 
 
