@@ -134,10 +134,11 @@ class ShardedDatabase:
     
     # TODO 5: implement this method as stated in the exercise description
     def recover_node(self, node_index):
-        if self.create_replicates()[node_index] is None:
+        rep = self.create_replicates()
+        if node_index not in rep:
             raise ValueError("Replica not found.")
         #特定index的主分片丢失，想用副本恢复主分片
-        to_recover_node = self.create_replicates()[node_index]  # 找到副本中index的位置的node
+        to_recover_node = rep[node_index]  # 找到副本中index的位置的node
         self.nodes[node_index] = to_recover_node  # 从副本恢复到主分片
         return to_recover_node  # return the recovered node.
 
