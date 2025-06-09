@@ -126,7 +126,6 @@ class ShardedDatabase:
         if self.doesDBContainKeys(list_kill):
             raise Exception("Wrong")
 
-
         return list_remain, list_kill
     
     # TODO 4: implement this method as stated in the exercise description
@@ -135,6 +134,8 @@ class ShardedDatabase:
     
     # TODO 5: implement this method as stated in the exercise description
     def recover_node(self, node_index):
+        if node_index not in self.create_replicates()[node_index]:
+            raise ValueError("Replica not found.")
         #特定index的主分片丢失，想用副本恢复主分片
         to_recover_node = self.create_replicates()[node_index]  # 找到副本中index的位置的node
         self.nodes[node_index] = to_recover_node  # 从副本恢复到主分片
