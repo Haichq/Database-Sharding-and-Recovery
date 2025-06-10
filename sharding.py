@@ -118,12 +118,12 @@ class ShardedDatabase:
         keys_deleted = []
         keys_remaining = []
 
-        for node_index, node_date in self.nodes.items():
+        for index in self.nodes:
             if node_index in nodes_to_empty:
 
-                keys_deleted.append(self.nodes[node_index].getall())
+                keys_deleted.append(self.nodes[index].getall())
             else:
-                keys_remaining.append(self.nodes[node_index].getall())
+                keys_remaining.append(self.nodes[index].getall())
 
         self.empty_nodes(nodes_to_empty)
 
