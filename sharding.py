@@ -119,7 +119,7 @@ class ShardedDatabase:
         keys_remaining = []
 
         for index in self.nodes:
-            if node_index in nodes_to_empty:
+            if index in nodes_to_empty:
 
                 keys_deleted.append(self.nodes[index].getall())
             else:
