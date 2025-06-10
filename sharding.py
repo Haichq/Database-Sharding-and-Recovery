@@ -128,7 +128,7 @@ class ShardedDatabase:
         self.empty_nodes(nodes_to_empty)
 
         if self.doesDBContainKeys(keys_deleted):
-            raise Exception("Some deleted keys still remain in the database")
+            raise Exception("The values still in the database are not what they should be")
 
         if not self.doesDBContainKeys(keys_remaining):
             raise Exception("Remaining keys were lost after killing nodes")
