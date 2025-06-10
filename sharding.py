@@ -115,23 +115,27 @@ class ShardedDatabase:
         if nodes_to_empty is None:
             nodes_to_empty = []
 
-        #  store value
-        self.store_books()
-        list_remain = []
-        list_kill = []
+        keys_deleted = []
+        keys_remaining = []
 
-        for node in self.nodes:
-            if node in nodes_to_empty:
-                list_kill.append(node)
+        for node_index, node_date in self.nodes.items():
+            keys = self.nodes.keys()
+            if node_index in nodes_to_empty:
+                keys_deleted.append(keys)
             else:
-                list_remain.append(node)
+                keys_remaining.append(keys)
 
         self.empty_nodes(nodes_to_empty)
 
-        if self.doesDBContainKeys(list_kill):
-            raise Exception("Wrong")
+        if self.doesDBContainKeys(keys_deleted):
+            raise Exception("Some deleted keys still remain in the database")
 
-        return list_remain, list_kill
+        if not self.doesDBContainKeys(keys_remaining):
+            raise Exception("Remaining keys were lost after killing nodes")
+
+        return  keys_remaining, keys_deleted
+
+
 
     
     # TODO 4: implement this method as stated in the exercise description
