@@ -121,9 +121,9 @@ class ShardedDatabase:
         for index in self.nodes:
             if index in nodes_to_empty:
 
-                keys_deleted.append(self.nodes[index].getall())
+                keys_deleted.extend(self.nodes[index].getall())
             else:
-                keys_remaining.append(self.nodes[index].getall())
+                keys_remaining.extend(self.nodes[index].getall())
 
         self.empty_nodes(nodes_to_empty)
 
