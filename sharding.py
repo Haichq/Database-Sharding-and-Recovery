@@ -119,15 +119,16 @@ class ShardedDatabase:
         keys_remaining = []
 
         for node_index, node_date in self.nodes.items():
+            keys_in_node = self.nodes.keys()
             if node_index in nodes_to_empty:
-                keys_deleted.append(node_index)
+                keys_deleted.append(keys_in_node)
             else:
-                keys_remaining.append(node_index)
+                keys_remaining.append(keys_in_node)
 
         self.empty_nodes(nodes_to_empty)
 
         if self.doesDBContainKeys(keys_deleted):
-            raise Exception("The values still in the database are not what they should be")
+            raise Exception(self.ERROR_MESSAGE_INVALID_DELTA)
 
         if not self.doesDBContainKeys(keys_remaining):
             raise Exception("Remaining keys were lost after killing nodes")
