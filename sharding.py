@@ -127,6 +127,7 @@ class ShardedDatabase:
             raise Exception("Wrong")
 
         return list_remain, list_kill
+
     
     # TODO 4: implement this method as stated in the exercise description
     def create_replicates(self):
