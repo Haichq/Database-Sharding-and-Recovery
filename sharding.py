@@ -81,85 +81,31 @@ class ShardedDatabase:
         return messages
 
     # TODO 1: implement this method as stated in the exercise description
-    def doesDBContainKey(self, key: str):  # 比如 key = "book1"
-        shard = self.hash_key(key)  # 计算book1在哪个分片
-
-        return self.nodes[shard].exists(key)  # 找到分片并查看该分片是否有key
+    def doesDBContainKey(self, key: str):
+        return
     
     # TODO 2: implement this method as stated in the exercise description
     def doesDBContainKeys(self, keys: list):
-        for key in keys:
-            if not self.doesDBContainKey(key):
-                return False
-        return True
+        return
 
     ERROR_MESSAGE_INVALID_DELTA = "The values still in the database are not what they should be"
     replicate_nodes = None
 
     # TODO 3: implement this method as stated in the exercise description
-    #  This method should take a list of node indices (nodes_to_empty).
-    #  First you store the values previously stored in the database, distinguishing between whether they are supposed to be deleted or not
-
-    #  Second you kill the respective nodes from the db (Use the provided methods empty_nodes()/empty_node())
-
-    #  Third, if at least one key was deleted, you check that the database no longer contains the elements of the killed nodes but still contains the elements of those that have not been killed.
-    #  If this does not hold, raise an exception with the given message (Use doesDBContainKeys()!)
-
-    #  Finally return the two lists of values (one which contains the elements still available, one which contains the elements deleted through killing the nodes)
-    #  As you see, sharding leads to an increase in availability,
-    #  simply because killing some nodes does not necessarily lead to all data being unavailable.
-    #  Instead, a certain amount of data is still available. To ensure a very low chance of data loss,
-    #  one would store each key in several nodes, so it is unlikely all nodes die at the same time.
-
-    def empty_nodes_check_remaining(self, nodes_to_empty=None):
-        if nodes_to_empty is None:
-            nodes_to_empty = []
-
-        keys_deleted = []
-        keys_remaining = []
-
-        for index in self.nodes:
-            if index in nodes_to_empty:
-
-                keys_deleted.extend(self.nodes[index].getall())
-            else:
-                keys_remaining.extend(self.nodes[index].getall())
-
-        self.empty_nodes(nodes_to_empty)
-
-        if self.doesDBContainKeys(keys_deleted):
-            raise Exception(self.ERROR_MESSAGE_INVALID_DELTA)
-
-        if not self.doesDBContainKeys(keys_remaining):
-            raise Exception("Remaining keys were lost after killing nodes")
-
-        return  keys_remaining, keys_deleted
-
-
-
+    def empty_nodes_check_remaining(self,nodes_to_empty=None):
+        return
     
     # TODO 4: implement this method as stated in the exercise description
     def create_replicates(self):
-        return self.nodes.copy()
+        return 
     
     # TODO 5: implement this method as stated in the exercise description
     def recover_node(self, node_index):
-        rep = self.create_replicates()
-        if node_index not in rep:
-            raise ValueError("Replica not found.")
-        #特定index的主分片丢失，想用副本恢复主分片
-        to_recover_node = rep[node_index]  # 找到副本中index的位置的node
-        self.nodes[node_index] = to_recover_node  # 从副本恢复到主分片
-        return to_recover_node  # return the recovered node.
-
+        return 
     
     # TODO 6: implement this method as stated in the exercise description
     def recover_nodes(self,nodes_to_recover):
-        result = []
-        for n in nodes_to_recover:
-            result.append(self.recover_node(n))
-
-        return result
+        return 
 
 
 
@@ -173,7 +119,7 @@ sharded_db = ShardedDatabase()
 
 sharded_db.create_replicates()
 
-nodes_to_be_emptied = [3, 4]
+nodes_to_be_emptied = [3,4]
 try:
     still_available, deleted = sharded_db.empty_nodes_check_remaining(nodes_to_be_emptied)
     print("Still available ", still_available)
