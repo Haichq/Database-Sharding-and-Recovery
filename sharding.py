@@ -120,11 +120,11 @@ class ShardedDatabase:
         list_remain = []
         list_kill = []
 
-        for key in self.nodes.keys():
-            if key == self.nodes[nodes_to_empty]:
-                list_kill.append(key)
+        for node in self.nodes:
+            if node in nodes_to_empty:
+                list_kill.append(node)
             else:
-                list_remain.append(key)
+                list_remain.append(node)
 
         self.empty_nodes(nodes_to_empty)
 
