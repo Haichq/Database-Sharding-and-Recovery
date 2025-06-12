@@ -117,7 +117,7 @@ def apply_operation(operation, store):
 
     # apply: convert_string_to_number()
     OpValue_in_number = convert_string_to_number(value)
-    StoreValue_in_number = convert_string_to_number(store[key])
+    StoreValue_in_number = convert_string_to_number(store.get("key", "0"))
 
     # operation handling here
     if action == "set":
@@ -189,7 +189,7 @@ def main(initial_kv_store, operation_list_list, undo_operation_list_list, redo_l
     with open(undo_log_file, "w") as file:
         for operation_list in undo_operation_list_list:
             # TODO Step 3: Write undo log to corresponding log file.
-            file.write(operation_list + '\n')
+            file.write(json.dumps(operation_list) + '\n')
 
 
             
