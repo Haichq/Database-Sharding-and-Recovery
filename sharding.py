@@ -115,12 +115,11 @@ class ShardedDatabase:
             raise Exception(self.ERROR_MESSAGE_INVALID_DELTA)
 
 
-
         return nodes_to_remaining, nodes_to_kill
     
     # TODO 4: implement this method as stated in the exercise description
     def create_replicates(self):
-        return 
+        return self.nodes.copy()
     
     # TODO 5: implement this method as stated in the exercise description
     def recover_node(self, node_index):
