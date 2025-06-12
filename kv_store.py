@@ -122,7 +122,9 @@ def apply_operation(operation, store):
 
     # apply: convert_string_to_number()
     OpValue_in_number = convert_string_to_number(value)
-    StoreValue_in_number = convert_string_to_number(store.get(key, "0"))
+
+    store[key] = store.get(key, "0")
+    StoreValue_in_number = convert_string_to_number(store[key])
 
     # operation handling here
     if action == "set":
