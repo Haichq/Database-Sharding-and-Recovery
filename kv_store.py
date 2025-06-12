@@ -118,7 +118,7 @@ def apply_operation(operation, store):
 
     # non-existent key handling here
     # TODO
-    value = operation.get("value", "0")
+    value = operation.get("value", "0")  # "value" 代表key
 
     # apply: convert_string_to_number()
     OpValue_in_number = convert_string_to_number(value)
@@ -204,27 +204,5 @@ def main(initial_kv_store, operation_list_list, undo_operation_list_list, redo_l
 
     # Step 6: Comparison of initial state and the state after the log files
     return kv_store, comparison_kv_store
-
-
-if __name__ == "__main__":
-    initial_store = {"test1": "100", "test2": "200"}
-
-    operations = [generate_random_operations(3) for _ in range(2)]
-
-    undo_ops = []
-    redo_log = "redo.log"
-    undo_log = "undo.log"
-
-    final_store, comparison_store = main(
-        initial_store,
-        operations,
-        undo_ops,
-        redo_log,
-        undo_log
-    )
-
-    print("Initial store:", initial_store)
-    print("Final store:", final_store)
-    print("Comparison store:", comparison_store)
 
 
