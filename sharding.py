@@ -114,7 +114,6 @@ class ShardedDatabase:
         if not self.doesDBContainKeys(nodes_to_remaining) or self.doesDBContainKeys(nodes_to_kill):
             raise Exception(self.ERROR_MESSAGE_INVALID_DELTA)
 
-
         return nodes_to_remaining, nodes_to_kill
     
     # TODO 4: implement this method as stated in the exercise description
@@ -123,11 +122,15 @@ class ShardedDatabase:
     
     # TODO 5: implement this method as stated in the exercise description
     def recover_node(self, node_index):
-        return 
+        copied_node_in_replica = self.create_replicates()[node_index]
+        self.nodes[node_index].set(copied_node_in_replica)
+        return copied_node_in_replica
     
     # TODO 6: implement this method as stated in the exercise description
-    def recover_nodes(self,nodes_to_recover):
-        return 
+    def recover_nodes(self, nodes_to_recover):
+        for node_index in nodes_to_recover:
+            return self.recover_node(node_index)
+
 
 
 
