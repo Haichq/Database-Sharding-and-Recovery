@@ -178,11 +178,11 @@ def main(initial_kv_store, operation_list_list, undo_operation_list_list, redo_l
             # ["set", "delete", "add", "subtract", "multiply", "divide"]
             # Hint: Consider if the key existed in the initial store or not
             # Hint: Consider machine precision for division
-            if action == "set" and key in kv_store:
+            if action == "set" and key in initial_kv_store:
                 undo_operations_list.append({"action": "delete", "key": key, "value" : initial_kv_store[key]})
-            if action == "set" and key not in kv_store:
+            if action == "set" and key not in initial_kv_store:
                 undo_operations_list.append({"action": "delete", "key": key})
-            if action == "delete" and key in kv_store:
+            if action == "delete" and key in initial_kv_store:
                 undo_operations_list.append({"action": "set", "key": key, "value": initial_kv_store[key]})
             if action in ("add", "subtract", "multiply", "divide") and key in initial_kv_store:
                 undo_operations_list.append({"action": "set", "key": key, "value": initial_kv_store[key]})
