@@ -194,7 +194,7 @@ def main(initial_kv_store, operation_list_list, undo_operation_list_list, redo_l
     with open(undo_log_file, "w") as file:
         for operation_list in undo_operation_list_list:
             # TODO Step 3: Write undo log to corresponding log file.
-            file.write(json.dumps(operation_list) + '\n')
+            file.write(json.dumps(operation_list) + "\n")
 
     # TODO Step 4: Apply Undo Log
     # apply_log here
