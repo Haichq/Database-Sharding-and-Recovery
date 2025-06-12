@@ -128,8 +128,9 @@ class ShardedDatabase:
     
     # TODO 6: implement this method as stated in the exercise description
     def recover_nodes(self, nodes_to_recover):
-        for node_index in nodes_to_recover:
-            return self.recover_node(node_index)
+        # for node_index in nodes_to_recover:
+         #   return self.recover_node(node_index)
+        return
 
 
 
