@@ -123,7 +123,7 @@ class ShardedDatabase:
     # TODO 5: implement this method as stated in the exercise description
     def recover_node(self, node_index):
         copied_node_in_replica = self.create_replicates()[node_index]
-        self.nodes[node_index].append(copied_node_in_replica)
+        self.nodes[node_index].append(copied_node_in_replica.getall())
         return copied_node_in_replica
     
     # TODO 6: implement this method as stated in the exercise description
