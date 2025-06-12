@@ -95,8 +95,28 @@ class ShardedDatabase:
     replicate_nodes = None
 
     # TODO 3: implement this method as stated in the exercise description
-    def empty_nodes_check_remaining(self,nodes_to_empty=None):
-        return
+    def empty_nodes_check_remaining(self, nodes_to_empty=None):
+        nodes_to_kill = []
+        nodes_to_remaining = []
+        for node_index in nodes_to_empty:
+            # 通过index找到对应的key
+            nodes_to_kill.append(self.nodes[node_index].getall())
+
+        # 找到DB中不在nodes_to_kill的节点
+        for key in self.nodes.keys():
+            if key not in nodes_to_kill:
+                nodes_to_remaining.append(key)
+
+        # kill the respective nodes from the db
+        self.empty_nodes(nodes_to_empty)
+
+        # check that the database
+        if not self.doesDBContainKeys(nodes_to_remaining) or self.doesDBContainKeys(nodes_to_kill):
+            raise Exception(self.ERROR_MESSAGE_INVALID_DELTA)
+
+
+
+        return nodes_to_remaining, nodes_to_kill
     
     # TODO 4: implement this method as stated in the exercise description
     def create_replicates(self):
