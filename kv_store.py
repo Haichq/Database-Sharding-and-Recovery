@@ -102,6 +102,7 @@ def apply_operation(operation, store):
     """
     action = operation["action"]
     key = operation["key"]
+
     # TODO Apply operations to store
     # Remember: We are only considering numerical values, but have more actions
     # Hint: use the convert_string_to_number() function
@@ -112,6 +113,11 @@ def apply_operation(operation, store):
     
     # non-existent key handling here
     # TODO
+    value = operation.get("value", "0")
+
+    # apply: convert_string_to_number()
+    OpValue_in_number = convert_string_to_number(value)
+    StoreValue_in_number = convert_string_to_number(store[key])
 
     # operation handling here
     if action == "set":
@@ -120,6 +126,18 @@ def apply_operation(operation, store):
         store.pop(key)
     # other actions here
     # TODO
+    elif action == "add":
+        store[key] = str(StoreValue_in_number + OpValue_in_number)
+    elif action == "subtract":
+        store[key] = str(StoreValue_in_number - OpValue_in_number)
+    elif action == "multiply":
+        store[key] = str(StoreValue_in_number * OpValue_in_number)
+    elif action == "divide":
+        if OpValue_in_number != 0:
+            store[key] = str(StoreValue_in_number / OpValue_in_number)
+        else:
+            raise Exception("Division can not be zero")
+
 
 def main(initial_kv_store, operation_list_list, undo_operation_list_list, redo_log_file, undo_log_file):
     """
@@ -141,6 +159,7 @@ def main(initial_kv_store, operation_list_list, undo_operation_list_list, redo_l
     for operation_list in operation_list_list:
         # TODO Step 1: Log and apply operations
         # Hint: you should consider using redo_log_file with logging function.
+        log_and_apply_operations(operation_list, kv_store, redo_log_file)
 
 
     comparison_kv_store = kv_store.copy()
@@ -155,6 +174,14 @@ def main(initial_kv_store, operation_list_list, undo_operation_list_list, redo_l
             # ["set", "delete", "add", "subtract", "multiply", "divide"]
             # Hint: Consider if the key existed in the initial store or not
             # Hint: Consider machine precision for division
+            if action == "set":
+                undo_operations_list.append({"action": "delete", "key": key})
+            if action == "delete":
+                undo_operations_list.append({"action": "set", "key": key, "value": initial_kv_store[key]})
+            if action in ("add","subtract","multiply","divide") and key in initial_kv_store:
+                undo_operations_list.append({"action": "set", "key": key, "value": initial_kv_store[key]})
+            if action in ("add", "subtract", "multiply", "divide") and key not in initial_kv_store:
+                undo_operations_list.append({"action": "delete", "key": key})
         undo_operation_list_list.append(undo_operations_list)
             
 
@@ -162,13 +189,19 @@ def main(initial_kv_store, operation_list_list, undo_operation_list_list, redo_l
     with open(undo_log_file, "w") as file:
         for operation_list in undo_operation_list_list:
             # TODO Step 3: Write undo log to corresponding log file.
+            file.write(operation_list + '\n')
+
+
             
 
     # TODO Step 4: Apply Undo Log
     # apply_log here
-
+    apply_log(undo_log_file, kv_store)  # 这步要恢复到初始状态
+    print("undo:", kv_store)
     # TODO Step 5: Apply Redo Log
     # apply_log here
+    apply_log(redo_log_file, kv_store) # 这步是重新做，目的是要恢复到最后的状态
+    print("redo:", kv_store)
 
     # Step 6: Comparison of initial state and the state after the log files
     return kv_store, comparison_kv_store
