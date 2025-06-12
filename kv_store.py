@@ -21,6 +21,7 @@ def random_key_value(key=None, l=8):
     value = ''.join(random.choices(string.digits, k=l))
     return key, value
 
+
 def generate_random_operations(n):
     """
     Generate a list of 'N' random operations.
@@ -41,6 +42,7 @@ def generate_random_operations(n):
             operations.append({"action": action, "key": key, "value": value})
     return operations
 
+
 def log_and_apply_operations(operation_list, store, log_file):
     """
     Log the operation and apply it to the store.
@@ -60,6 +62,7 @@ def log_and_apply_operations(operation_list, store, log_file):
     for operation in operation_list:
         apply_operation(operation, store)
 
+
 def apply_log(file_name, store):
     """
     Apply the operations from a log file to the store.
@@ -77,6 +80,7 @@ def apply_log(file_name, store):
             for op in operations:
                 apply_operation(op, store)
 
+
 def convert_string_to_number(num):
     """
     Converts the string representation of a number back to a float.
@@ -88,6 +92,7 @@ def convert_string_to_number(num):
         float: the converted number
     """
     return float(num)
+
 
 def apply_operation(operation, store):
     """
@@ -110,14 +115,14 @@ def apply_operation(operation, store):
     # Hint: After calculation with numerical type, convert into str
     # ["set", "delete", "add", "subtract", "multiply", "divide"]
     # When applying mathematical operations on a non-existent key, initialize it with value 0
-    
+
     # non-existent key handling here
     # TODO
     value = operation.get("value", "0")
 
     # apply: convert_string_to_number()
     OpValue_in_number = convert_string_to_number(value)
-    StoreValue_in_number = convert_string_to_number(store.get("key", "0"))
+    StoreValue_in_number = convert_string_to_number(store.get(key, "0"))
 
     # operation handling here
     if action == "set":
@@ -161,7 +166,6 @@ def main(initial_kv_store, operation_list_list, undo_operation_list_list, redo_l
         # Hint: you should consider using redo_log_file with logging function.
         log_and_apply_operations(operation_list, kv_store, redo_log_file)
 
-
     comparison_kv_store = kv_store.copy()
 
     # Step 2: Generate and write Undo Log
@@ -178,12 +182,11 @@ def main(initial_kv_store, operation_list_list, undo_operation_list_list, redo_l
                 undo_operations_list.append({"action": "delete", "key": key})
             if action == "delete":
                 undo_operations_list.append({"action": "set", "key": key, "value": initial_kv_store[key]})
-            if action in ("add","subtract","multiply","divide") and key in initial_kv_store:
+            if action in ("add", "subtract", "multiply", "divide") and key in initial_kv_store:
                 undo_operations_list.append({"action": "set", "key": key, "value": initial_kv_store[key]})
             if action in ("add", "subtract", "multiply", "divide") and key not in initial_kv_store:
                 undo_operations_list.append({"action": "delete", "key": key})
         undo_operation_list_list.append(undo_operations_list)
-            
 
     # Write undo log.
     with open(undo_log_file, "w") as file:
@@ -191,17 +194,37 @@ def main(initial_kv_store, operation_list_list, undo_operation_list_list, redo_l
             # TODO Step 3: Write undo log to corresponding log file.
             file.write(json.dumps(operation_list) + '\n')
 
-
-            
-
     # TODO Step 4: Apply Undo Log
     # apply_log here
     apply_log(undo_log_file, kv_store)  # 这步要恢复到初始状态
-    print("undo:", kv_store)
+
     # TODO Step 5: Apply Redo Log
     # apply_log here
-    apply_log(redo_log_file, kv_store) # 这步是重新做，目的是要恢复到最后的状态
-    print("redo:", kv_store)
+    apply_log(redo_log_file, kv_store)  # 这步是重新做，目的是要恢复到最后的状态
 
     # Step 6: Comparison of initial state and the state after the log files
     return kv_store, comparison_kv_store
+
+
+if __name__ == "__main__":
+    initial_store = {"test1": "100", "test2": "200"}
+
+    operations = [generate_random_operations(3) for _ in range(2)]
+
+    undo_ops = []
+    redo_log = "redo.log"
+    undo_log = "undo.log"
+
+    final_store, comparison_store = main(
+        initial_store,
+        operations,
+        undo_ops,
+        redo_log,
+        undo_log
+    )
+
+    print("Initial store:", initial_store)
+    print("Final store:", final_store)
+    print("Comparison store:", comparison_store)
+
+
