@@ -214,25 +214,3 @@ def main(initial_kv_store, operation_list_list, undo_operation_list_list, redo_l
     return kv_store, comparison_kv_store
 
 
-if __name__ == "__main__":
-    initial_store = {"test1": "100", "test2": "200"}
-
-    operations = [generate_random_operations(3) for _ in range(2)]
-
-    undo_ops = []
-    redo_log = "redo.log"
-    undo_log = "undo.log"
-
-    final_store, comparison_store = main(
-        initial_store,
-        operations,
-        undo_ops,
-        redo_log,
-        undo_log
-    )
-
-    print("Initial store:", initial_store)
-    print("Final store:", final_store)
-    print("Comparison store:", comparison_store)
-
-
