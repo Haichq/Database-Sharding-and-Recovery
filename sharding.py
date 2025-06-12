@@ -82,7 +82,7 @@ class ShardedDatabase:
 
     # TODO 1: implement this method as stated in the exercise description
     def doesDBContainKey(self, key: str):
-        if 0 <= self.hash_key(key) <= 9:
+        if self.nodes[self.hash_key(key)] is not None:
             return True
         return False
     
